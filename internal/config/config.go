@@ -21,7 +21,7 @@ func GetApiKey() string {
 func GetWeatherBaseURL() string {
 	url := os.Getenv("OPENWEATHER_WEATHER_URL")
 	if url == "" {
-		url = "https://api.openweathermap.org/data/3.0/onecall"
+		url = "https://api.openweathermap.org/data/2.5/weather"
 	}
 	return url
 }
