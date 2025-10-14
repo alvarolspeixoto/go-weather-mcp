@@ -1,11 +1,10 @@
-package weather
+package openweathermap
 
 import (
 	"github.com/alvarolspeixoto/go-weather-mcp/internal/domain/weather"
-	"github.com/alvarolspeixoto/go-weather-mcp/internal/infra/openweathermap"
 )
 
-func ToDomain(resp *openweathermap.OWWeatherResponse) *weather.Weather {
+func WeatherResponseToDomain(resp *OWWeatherResponse) *weather.Weather {
 	mainDesc := ""
 	if len(resp.Weather) > 0 {
 		mainDesc = resp.Weather[0].Description

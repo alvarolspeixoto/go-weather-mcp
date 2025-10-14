@@ -1,15 +1,14 @@
-package geocode
+package openweathermap
 
 import (
 	"github.com/alvarolspeixoto/go-weather-mcp/internal/domain/geocode"
-	"github.com/alvarolspeixoto/go-weather-mcp/internal/infra/openweathermap"
 )
 
-func ToDomain(dtos []openweathermap.OWGeocode) *geocode.Location {
-	if len(dtos) == 0 {
+func GeocodeResponseToDomain(dto *OWGeocode) *geocode.Location {
+	if dto == nil {
 		return nil
 	}
-	dto := dtos[0]
+
 	return &geocode.Location{
 		Latitude:  dto.Latitude,
 		Longitude: dto.Longitude,

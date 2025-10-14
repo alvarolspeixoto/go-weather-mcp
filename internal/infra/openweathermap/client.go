@@ -8,21 +8,23 @@ import (
 )
 
 type Client struct {
-	APIKey     string
-	BaseURL    string
-	HTTPClient *http.Client
+	APIKey         string
+	WeatherBaseURL string
+	GeocodeBaseURL string
+	HTTPClient     *http.Client
 }
 
-func NewClient(apiKey string, url string) *Client {
+func NewClient(apiKey string, weatherBaseURL string, geocodeBaseURL string) *Client {
 	return &Client{
-		APIKey:     apiKey,
-		BaseURL:    url,
-		HTTPClient: &http.Client{},
+		APIKey:         apiKey,
+		WeatherBaseURL: weatherBaseURL,
+		GeocodeBaseURL: geocodeBaseURL,
+		HTTPClient:     &http.Client{},
 	}
 }
 
-func (c *Client) GetGeocode(city string) ([]OWGeocodeResponse, error) {
-	endpoint := fmt.Sprintf("%s?q=%s&limit=1&appid=%s", c.BaseURL, url.QueryEscape(city), c.APIKey)
+func (c *Client) GetGeocode(city string) (*OWGeocode, error) {
+	endpoint := fmt.Sprintf("%s?q=%s&limit=1&appid=%s", c.GeocodeBaseURL, url.QueryEscape(city), c.APIKey)
 	resp, err := c.HTTPClient.Get(endpoint)
 	if err != nil {
 		return nil, err
@@ -33,15 +35,19 @@ func (c *Client) GetGeocode(city string) ([]OWGeocodeResponse, error) {
 		return nil, fmt.Errorf("unexpected status code from geocode API: %d", resp.StatusCode)
 	}
 
-	var results []OWGeocodeResponse
+	var results OWGeocodeResponse
 	if err := json.NewDecoder(resp.Body).Decode(&results); err != nil {
 		return nil, err
 	}
-	return results, nil
+	if len(results) == 0 {
+		return nil, fmt.Errorf("no results found")
+	}
+
+	return &results[0], nil
 }
 
 func (c *Client) GetWeather(lat, lon float64) (*OWWeatherResponse, error) {
-	endpoint := fmt.Sprintf("%s?lat=%f&lon=%f&appid=%s", c.BaseURL, lat, lon, c.APIKey)
+	endpoint := fmt.Sprintf("%s?lat=%f&lon=%f&appid=%s", c.WeatherBaseURL, lat, lon, c.APIKey)
 	resp, err := c.HTTPClient.Get(endpoint)
 	if err != nil {
 		return nil, err
