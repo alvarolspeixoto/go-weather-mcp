@@ -16,6 +16,21 @@ import (
 	"github.com/alvarolspeixoto/go-weather-mcp/internal/mcp/tools"
 )
 
+func startHTTPServer(service *weatherapp.Service, port int) {
+	handler := apihttp.NewHandler(service)
+	if err := apihttp.StartServer(handler, port); err != nil {
+		log.Fatalf("Erro ao iniciar servidor HTTP: %v", err)
+	}
+}
+
+func startMCPServer(service *weatherapp.Service) {
+	weatherTool := tools.NewWeatherTool(service)
+	ctx := context.Background()
+	if err := mcp.Start(ctx, weatherTool); err != nil {
+		log.Fatalf("Erro ao iniciar MCP Server: %v", err)
+	}
+}
+
 func main() {
 	config.Load()
 
@@ -48,36 +63,19 @@ func main() {
 	switch *mode {
 	case "http":
 		log.Printf("Iniciando servidor HTTP na porta %d...", *port)
-		handler := apihttp.NewHandler(service)
-		if err := apihttp.StartServer(handler, *port); err != nil {
-			log.Fatalf("Erro ao iniciar servidor HTTP: %v", err)
-		}
+		startHTTPServer(service, *port)
 
 	case "mcp":
 		log.Println("Iniciando MCP Server...")
-		weatherTool := tools.NewWeatherTool(service)
-		ctx := context.Background()
-		if err := mcp.Start(ctx, weatherTool); err != nil {
-			log.Fatalf("Erro ao iniciar MCP Server: %v", err)
-		}
-
+		startMCPServer(service)
 	case "dual":
 		log.Printf("Iniciando MCP e HTTP Server simultaneamente (porta %d)...", *port)
 
 		// Inicia HTTP em goroutine
-		go func() {
-			handler := apihttp.NewHandler(service)
-			if err := apihttp.StartServer(handler, *port); err != nil {
-				log.Fatalf("Erro no servidor HTTP: %v", err)
-			}
-		}()
+		go startHTTPServer(service, *port)
 
-		// Roda MCP no thread principal
-		ctx := context.Background()
-		weatherTool := tools.NewWeatherTool(service)
-		if err := mcp.Start(ctx, weatherTool); err != nil {
-			log.Fatalf("Erro no MCP Server: %v", err)
-		}
+		// Roda MCP na thread principal
+		startMCPServer(service)
 
 	default:
 		log.Fatalf("Modo inválido: %s. Use 'http', 'mcp' ou 'dual'.", *mode)
