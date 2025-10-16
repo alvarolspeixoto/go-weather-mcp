@@ -19,29 +19,20 @@ func main() {
 	// Cria o client OpenWeather
 	client := openweathermap.NewClient(config.GetApiKey(), config.GetWeatherBaseURL(), config.GetGeocodeBaseURL())
 
-	// Cria os repositórios
 	geoRepo := openweathermap.NewGeocodeRepository(client)
 	weatherRepo := openweathermap.NewWeatherRepository(client)
 
-	// Cria usecases
 	geoUC := geocode.NewUseCase(geoRepo)
 	weatherUC := weather.NewUseCase(weatherRepo)
 
-	// Cria service de aplicação
 	service := weatherapp.NewService(weatherUC, geoUC)
-
-	// Cria a tool
 	weatherTool := tools.NewWeatherTool(service)
 
-	// Cria context
 	ctx := context.Background()
 
-	log.Println("Iniciando o servidor MCP...")
+	log.Println("Starting MCP Server...")
 
-	// Inicia o MCP server
 	if err := mcp.Start(ctx, weatherTool); err != nil {
 		log.Fatal(err)
 	}
-
-	log.Println("Servidor MCP rodando com sucesso.")
 }
