@@ -15,23 +15,13 @@
 </p>
 <br>
 
-##  Table of Contents
-
-- [ Overview](#-overview)
-- [ Features](#-features)
-- [ Project Structure](#-project-structure)
-  - [ Project Index](#-project-index)
-- [ Getting Started](#-getting-started)
-  - [ Prerequisites](#-prerequisites)
-  - [ Installation](#-installation)
-  - [ Usage](#-usage)
----
-
 ##  Overview
 
 This project implements an MCP Server that provides weather information based on an input city, besides implementing a API REST with the same functionality. This is made using Go and [Open Weather API](https://openweathermap.org/api) as information source.
 
 An MCP (Model Context Protocol) server is a backend application that manages and provides the context required for an AI model to operate and respond to a request.
+
+This code was developed as a way to learn MCP Server concepts and Clean Architecture in Golang.
 
 ---
 
@@ -277,7 +267,8 @@ Run go-weather-mcp using the following command:
 ```sh
 ❯ go run ./cmd/server --mode={mode} --port={port}
 ```
-- Modes: `mcp` (for running only MCP server), `http` (only HTTP server) and `dual` (runs both servers)
+- {mode}: `mcp` (for running only MCP server), `http` (only HTTP server) and `dual` (runs both servers).
+- {port} Only necessary when using `http` or `dual` mode.
 
 For testing the MCP Server in Claude Desktop, you should configure it in your `claude_desktop_config.json`. Example for Windows:
 
