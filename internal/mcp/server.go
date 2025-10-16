@@ -9,7 +9,6 @@ import (
 )
 
 func Start(ctx context.Context, weatherTool *tools.WeatherTool) error {
-	// Cria o MCP server
 	server := mcp.NewServer(&mcp.Implementation{Name: "Weather MCP Server", Version: "v1.0.0"}, nil)
 
 	toolDef := &mcp.Tool{
@@ -19,6 +18,7 @@ func Start(ctx context.Context, weatherTool *tools.WeatherTool) error {
 
 	mcp.AddTool(server, toolDef, weatherTool.GetWeatherByCity)
 
+	log.Print("Servidor MCP iniciado usando StdioTransport")
 	if err := server.Run(context.Background(), &mcp.StdioTransport{}); err != nil {
 		log.Fatalf("Error running MCP server: %v", err)
 		return err
