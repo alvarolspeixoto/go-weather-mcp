@@ -3,9 +3,6 @@
 </p>
 <p align="center"><h1 align="center">GO-WEATHER-MCP</h1></p>
 <p align="center">
-	<em><code>❯ REPLACE-ME</code></em>
-</p>
-<p align="center">
 	<img src="https://img.shields.io/github/license/alvarolspeixoto/go-weather-mcp?style=default&logo=opensourceinitiative&logoColor=white&color=0080ff" alt="license">
 	<img src="https://img.shields.io/github/last-commit/alvarolspeixoto/go-weather-mcp?style=default&logo=git&logoColor=white&color=0080ff" alt="last-commit">
 	<img src="https://img.shields.io/github/languages/top/alvarolspeixoto/go-weather-mcp?style=default&color=0080ff" alt="repo-top-language">
